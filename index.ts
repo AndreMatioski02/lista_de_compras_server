@@ -14,7 +14,12 @@ app.get("/api/get/users", (req: any, res: any) => {
     if (err) {
       console.log(err);
     }
-    res.send(result);
+
+    if (result.length > 0) {
+      res.send(result);
+    } else {
+      res.status(404).send("Nenhum usuário encontrado!");
+    }
   });
 });
 
@@ -27,21 +32,31 @@ app.get("/api/get/user/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Usuário não encontrado!");
+      }
     }
   );
 });
 
 app.post("/api/create/user", (req: any, res: any) => {
-  const { id, name, email, user, password } = req.body;
+  const { name, email, user, password } = req.body;
   db.query(
-    `INSERT INTO db_lista_compras.user(id, name, email, user, password) VALUES (?, ?, ?, ?, ?)`,
-    [id, name, email, user, password],
+    `INSERT INTO db_lista_compras.user(name, email, user, password) VALUES (?, ?, ?, ?)`,
+    [name, email, user, password],
     (err: any, result: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(500).send("Não foi possível cadastrar o usuário!");
+      }
     }
   );
 });
@@ -56,7 +71,55 @@ app.delete("/api/delete/user/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send("Não foi possível deletar o usuário, verifique o ID!");
+      }
+    }
+  );
+});
+
+app.put("/api/update/user/:id", (req: any, res: any) => {
+  const id = req.params.id;
+  const { name, email, user, password } = req.body;
+  db.query(
+    `UPDATE db_lista_compras.user SET name = '${name}', email = '${email}', user = '${user}', password = '${password}' WHERE id = ${id}`,
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send("Não foi possível alterar o usuário, verifique o ID!");
+      }
+    }
+  );
+});
+
+// Login
+
+app.post("/api/login", (req: any, res: any) => {
+  const { email, password } = req.body;
+  db.query(
+    `SELECT * FROM db_lista_compras.user WHERE email = '${email}' AND password = '${password}'`,
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(401).send("Usuário ou senha inválido!");
+      }
     }
   );
 });
@@ -70,7 +133,12 @@ app.get("/api/get/products", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Nenhum produto encontrado!");
+      }
     }
   );
 });
@@ -84,21 +152,35 @@ app.get("/api/get/product/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Produto não encontrado!");
+      }
     }
   );
 });
 
 app.post("/api/create/product", (req: any, res: any) => {
-  const { id, name, brand, price, expiration_date, description } = req.body;
+  const { name, brand, price, expiration_date, description } = req.body;
   db.query(
-    `INSERT INTO db_lista_compras.product(id, name, brand, price, expiration_date, description) VALUES (?, ?, ?, ?, ?, ?)`,
-    [id, name, brand, price, expiration_date, description],
+    `INSERT INTO db_lista_compras.product(name, brand, price, expiration_date, description) VALUES (?, ?, ?, ?, ?)`,
+    [name, brand, price, expiration_date, description],
     (err: any, result: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send(
+            "Não foi possível criar o produto, verifique os dados enviados!"
+          );
+      }
     }
   );
 });
@@ -113,7 +195,37 @@ app.delete("/api/delete/product/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send("Não foi possível deletar o produto, verifique o ID!");
+      }
+    }
+  );
+});
+
+app.put("/api/update/product/:id", (req: any, res: any) => {
+  const id = req.params.id;
+  const { name, brand, price, expiration_date, description } = req.body;
+  db.query(
+    `UPDATE db_lista_compras.product SET name = '${name}', brand = '${brand}', price = '${price}', expiration_date = '${expiration_date}', description = '${description}' WHERE id = ${id}`,
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send(
+            "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
+          );
+      }
     }
   );
 });
@@ -127,7 +239,12 @@ app.get("/api/get/cart_products", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Nenhum produto encontrado!");
+      }
     }
   );
 });
@@ -141,7 +258,16 @@ app.get("/api/get/cart_product/:shopping_cart_id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(404)
+          .send(
+            "Nenhum produto encontrado para este carrinho, verifique os IDs!"
+          );
+      }
     }
   );
 });
@@ -169,19 +295,53 @@ app.post("/api/create/cart_product", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send(
+            "Não foi possível criar o produto, verifique os dados enviados!"
+          );
+      }
     }
   );
 });
 
 app.delete(
-  "/api/delete/cart_product/:shopping_cart_id",
+  "/api/delete/cart_product/:shopping_cart_id/:product_id",
   (req: any, res: any) => {
     const shopping_cart_id = req.params.shopping_cart_id;
+    const product_id = req.params.product_id;
 
     db.query(
-      "DELETE FROM db_lista_compras.cart_product WHERE shopping_cart_id= ?",
-      shopping_cart_id,
+      `DELETE FROM db_lista_compras.cart_product WHERE shopping_cart_id= ${shopping_cart_id} AND product_id = ${product_id}`,
+      (err: any, result: any) => {
+        if (err) {
+          console.log(err);
+        }
+
+        if (result) {
+          res.send(result);
+        } else {
+          res
+            .status(500)
+            .send("Não foi possível deletar o produto, verifique o ID!");
+        }
+      }
+    );
+  }
+);
+
+app.put(
+  "/api/update/cart_product/:shopping_cart_id/:product_id",
+  (req: any, res: any) => {
+    const shopping_cart_id = req.params.shopping_cart_id;
+    const product_id = req.params.product_id;
+    const { quantity, created_at, total_value, product_value } = req.body;
+    db.query(
+      `UPDATE db_lista_compras.cart_product SET shopping_cart_id = '${shopping_cart_id}', product_id = ${product_id}, quantity = ${quantity}, created_at = '${created_at}', total_value = '${total_value}', product_value = ${product_value} WHERE shopping_cart_id = ${shopping_cart_id} AND product_id = ${product_id}`,
       (err: any, result: any) => {
         if (err) {
           console.log(err);
@@ -221,10 +381,10 @@ app.get("/api/get/shopping_cart/:id", (req: any, res: any) => {
 });
 
 app.post("/api/create/shopping_cart", (req: any, res: any) => {
-  const { id, total_value, status, created_at, updated_at, user_id } = req.body;
+  const { total_value, status, created_at, updated_at, user_id } = req.body;
   db.query(
-    `INSERT INTO db_lista_compras.shopping_cart(id, total_value, status, created_at, updated_at, user_id) VALUES (?, ?, ?, ?, ?, ?)`,
-    [id, total_value, status, created_at, updated_at, user_id],
+    `INSERT INTO db_lista_compras.shopping_cart(total_value, status, created_at, updated_at, user_id) VALUES (?, ?, ?, ?, ?)`,
+    [total_value, status, created_at, updated_at, user_id],
     (err: any, result: any) => {
       if (err) {
         console.log(err);
@@ -234,23 +394,20 @@ app.post("/api/create/shopping_cart", (req: any, res: any) => {
   );
 });
 
-app.delete(
-  "/api/delete/shopping_cart/:shopping_cart_id",
-  (req: any, res: any) => {
-    const shopping_cart_id = req.params.shopping_cart_id;
+app.delete("/api/delete/shopping_cart/:id", (req: any, res: any) => {
+  const id = req.params.id;
 
-    db.query(
-      "DELETE FROM db_lista_compras.shopping_cart WHERE shopping_cart_id= ?",
-      shopping_cart_id,
-      (err: any, result: any) => {
-        if (err) {
-          console.log(err);
-        }
-        res.send(result);
+  db.query(
+    "DELETE FROM db_lista_compras.shopping_cart WHERE id= ?",
+    id,
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
       }
-    );
-  }
-);
+      res.send(result);
+    }
+  );
+});
 
 app.put("/api/update/shopping_cart/:id", (req: any, res: any) => {
   const id = req.params.id;
@@ -261,7 +418,7 @@ app.put("/api/update/shopping_cart/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      console.log(result);
+      res.send(result);
     }
   );
 });
