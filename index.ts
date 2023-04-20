@@ -36,7 +36,7 @@ app.get("/api/get/user/:id", (req: any, res: any) => {
       if (result.length > 0) {
         res.send(result);
       } else {
-        res.status(404).send("Usuário não encontrado!");
+        res.status(404).send("Usuário não encontrado, verifique o ID!");
       }
     }
   );
@@ -52,7 +52,7 @@ app.post("/api/create/user", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result) {
         res.send(result);
       } else {
         res.status(500).send("Não foi possível cadastrar o usuário!");
@@ -72,7 +72,7 @@ app.delete("/api/delete/user/:id", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result.affectedRows > 0) {
         res.send(result);
       } else {
         res
@@ -93,7 +93,7 @@ app.put("/api/update/user/:id", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result.affectedRows > 0) {
         res.send(result);
       } else {
         res
@@ -172,7 +172,7 @@ app.post("/api/create/product", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result) {
         res.send(result);
       } else {
         res
@@ -196,7 +196,7 @@ app.delete("/api/delete/product/:id", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result.affectedRows > 0) {
         res.send(result);
       } else {
         res
@@ -217,7 +217,7 @@ app.put("/api/update/product/:id", (req: any, res: any) => {
         console.log(err);
       }
 
-      if (result.length > 0) {
+      if (result.affectedRows > 0) {
         res.send(result);
       } else {
         res
@@ -230,7 +230,7 @@ app.put("/api/update/product/:id", (req: any, res: any) => {
   );
 });
 
-// Cart Product
+// Cart Product OK
 
 app.get("/api/get/cart_products", (req: any, res: any) => {
   db.query(
@@ -322,7 +322,7 @@ app.delete(
           console.log(err);
         }
 
-        if (result) {
+        if (result.affectedRows > 0) {
           res.send(result);
         } else {
           res
@@ -346,13 +346,22 @@ app.put(
         if (err) {
           console.log(err);
         }
-        res.send(result);
+
+        if (result.affectedRows > 0) {
+          res.send(result);
+        } else {
+          res
+            .status(500)
+            .send(
+              "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
+            );
+        }
       }
     );
   }
 );
 
-// Shopping Cart
+// Shopping Cart OK
 
 app.get("/api/get/shopping_cart", (req: any, res: any) => {
   db.query(
@@ -361,7 +370,12 @@ app.get("/api/get/shopping_cart", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Nenhum carrinho encontrado!");
+      }
     }
   );
 });
@@ -375,7 +389,12 @@ app.get("/api/get/shopping_cart/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Nenhum carrinho encontrado!");
+      }
     }
   );
 });
@@ -389,7 +408,16 @@ app.post("/api/create/shopping_cart", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send(
+            "Não foi possível criar o carrinho, verifique os dados enviados!"
+          );
+      }
     }
   );
 });
@@ -404,7 +432,14 @@ app.delete("/api/delete/shopping_cart/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.affectedRows > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send("Não foi possível deletar o carrinho, verifique o ID!");
+      }
     }
   );
 });
@@ -418,7 +453,16 @@ app.put("/api/update/shopping_cart/:id", (req: any, res: any) => {
       if (err) {
         console.log(err);
       }
-      res.send(result);
+
+      if (result.affectedRows > 0) {
+        res.send(result);
+      } else {
+        res
+          .status(500)
+          .send(
+            "Não foi possível atualizar o carrinho, verifique o ID e os dados enviados!"
+          );
+      }
     }
   );
 });
