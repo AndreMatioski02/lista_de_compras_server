@@ -4,9 +4,11 @@ const cors = require("cors");
 
 const app = express();
 const PORT = 3333;
+
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
+
 app.use(express.json());
 
 // Users
@@ -77,9 +79,9 @@ app.delete("/api/delete/user/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send("Não foi possível deletar o usuário, verifique o ID!");
+        res.status(500).send(
+          "Não foi possível deletar o usuário, verifique o ID!"
+        );
       }
     }
   );
@@ -98,9 +100,9 @@ app.put("/api/update/user/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send("Não foi possível alterar o usuário, verifique o ID!");
+        res.status(500).send(
+          "Não foi possível alterar o usuário, verifique o ID!"
+        );
       }
     }
   );
@@ -177,11 +179,9 @@ app.post("/api/create/product", (req: any, res: any) => {
       if (result) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send(
-            "Não foi possível criar o produto, verifique os dados enviados!"
-          );
+        res.status(500).send(
+          "Não foi possível criar o produto, verifique os dados enviados!"
+        );
       }
     }
   );
@@ -201,9 +201,9 @@ app.delete("/api/delete/product/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send("Não foi possível deletar o produto, verifique o ID!");
+        res.status(500).send(
+          "Não foi possível deletar o produto, verifique o ID!"
+        );
       }
     }
   );
@@ -222,11 +222,9 @@ app.put("/api/update/product/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send(
-            "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
-          );
+        res.status(500).send(
+          "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
+        );
       }
     }
   );
@@ -264,8 +262,7 @@ app.get("/api/get/cart_product/:shopping_cart_id", (req: any, res: any) => {
       if (result.length > 0) {
         res.send(result);
       } else {
-        res
-          .send([]);
+        res.send([]);
       }
     }
   );
@@ -285,8 +282,7 @@ app.get("/api/get/cart_product/:shopping_cart_id/:product_id", (req: any, res: a
       if (result.length > 0) {
         res.send(result);
       } else {
-        res
-          .send([]);
+        res.send([]);
       }
     }
   );
@@ -319,11 +315,9 @@ app.post("/api/create/cart_product", (req: any, res: any) => {
       if (result) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send(
-            "Não foi possível criar o produto, verifique os dados enviados!"
-          );
+        res.status(500).send(
+          "Não foi possível criar o produto, verifique os dados enviados!"
+        );
       }
     }
   );
@@ -345,9 +339,9 @@ app.delete(
         if (result) {
           res.send(result);
         } else {
-          res
-            .status(500)
-            .send("Não foi possível deletar o produto, verifique o ID!");
+          res.status(500).send(
+            "Não foi possível deletar o produto, verifique o ID!"
+          );
         }
       }
     );
@@ -370,11 +364,9 @@ app.put(
         if (result) {
           res.send(result);
         } else {
-          res
-            .status(500)
-            .send(
-              "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
-            );
+          res.status(500).send(
+            "Não foi possível atualizar o produto, verifique o ID e os dados enviados!"
+          );
         }
       }
     );
@@ -451,11 +443,9 @@ app.post("/api/create/shopping_cart", (req: any, res: any) => {
       if (result) {
         res.status(200).send(result);
       } else {
-        res
-          .status(500)
-          .send(
-            "Não foi possível criar o carrinho, verifique os dados enviados!"
-          );
+        res.status(500).send(
+          "Não foi possível criar o carrinho, verifique os dados enviados!"
+        );
       }
     }
   );
@@ -475,9 +465,9 @@ app.delete("/api/delete/shopping_cart/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send("Não foi possível deletar o carrinho, verifique o ID!");
+        res.status(500).send(
+          "Não foi possível deletar o carrinho, verifique o ID!"
+        );
       }
     }
   );
@@ -496,11 +486,9 @@ app.put("/api/update/shopping_cart/:id", (req: any, res: any) => {
       if (result.affectedRows > 0) {
         res.send(result);
       } else {
-        res
-          .status(500)
-          .send(
-            "Não foi possível atualizar o carrinho, verifique o ID e os dados enviados!"
-          );
+        res.status(500).send(
+          "Não foi possível atualizar o carrinho, verifique o ID e os dados enviados!"
+        );
       }
     }
   );
