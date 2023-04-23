@@ -4,7 +4,9 @@ const cors = require("cors");
 
 const app = express();
 const PORT = 3333;
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 app.use(express.json());
 
 // Users
@@ -263,10 +265,28 @@ app.get("/api/get/cart_product/:shopping_cart_id", (req: any, res: any) => {
         res.send(result);
       } else {
         res
-          .status(404)
-          .send(
-            "Nenhum produto encontrado para este carrinho, verifique os IDs!"
-          );
+          .send([]);
+      }
+    }
+  );
+});
+
+app.get("/api/get/cart_product/:shopping_cart_id/:product_id", (req: any, res: any) => {
+  const { shopping_cart_id } = req.params;
+  const { product_id } = req.params;
+  db.query(
+    "SELECT * FROM db_lista_compras.cart_product WHERE shopping_cart_id = ? AND product_id = ?",
+    [shopping_cart_id, product_id],
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res
+          .send([]);
       }
     }
   );
@@ -322,7 +342,7 @@ app.delete(
           console.log(err);
         }
 
-        if (result.affectedRows > 0) {
+        if (result) {
           res.send(result);
         } else {
           res
@@ -347,7 +367,7 @@ app.put(
           console.log(err);
         }
 
-        if (result.affectedRows > 0) {
+        if (result) {
           res.send(result);
         } else {
           res
@@ -366,6 +386,25 @@ app.put(
 app.get("/api/get/shopping_cart", (req: any, res: any) => {
   db.query(
     "SELECT * FROM db_lista_compras.shopping_cart",
+    (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.status(404).send("Nenhum carrinho encontrado!");
+      }
+    }
+  );
+});
+
+app.get("/api/get/shopping_cart/user/:userId", (req: any, res: any) => {
+  const { userId } = req.params;
+  db.query(
+    "SELECT * FROM db_lista_compras.shopping_cart WHERE user_id = ?",
+    [userId],
     (err: any, result: any) => {
       if (err) {
         console.log(err);
@@ -410,7 +449,7 @@ app.post("/api/create/shopping_cart", (req: any, res: any) => {
       }
 
       if (result) {
-        res.send(result);
+        res.status(200).send(result);
       } else {
         res
           .status(500)
