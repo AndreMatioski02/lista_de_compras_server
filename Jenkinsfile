@@ -7,6 +7,13 @@ pipeline {
   }
   stages {
     stage('Build') {
+      environment {
+        DATA_BASE_HOST = 'localhost'
+        DATA_BASE_USER = 'root'
+        DATA_BASE_SCHEMA = 'db_lista_compras'
+        DATA_BASE_PASSWORD = 'SenhaDoRoot'
+        DATA_BASE_PORT = '30306'
+      }
       steps {
         sh 'npm install'
         sh 'npm run dev'
